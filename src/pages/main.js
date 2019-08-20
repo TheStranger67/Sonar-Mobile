@@ -28,7 +28,7 @@ export default class Main extends Component {
     const { posts } = this.state;
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>CYKA BLYAT!</Text>
+        <Text style={styles.welcome}>Projeto Sonar</Text>
         {posts.map (post => (
           <View key={post.id} style={styles.post}>
             <Text style={styles.userName}> {post.user_name} </Text>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create ({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgb(73, 77, 110)',
+    backgroundColor: '#212023',
   },
   welcome: {
     fontSize: 26,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create ({
     color: '#fff'
   },
   post: {
-    backgroundColor: 'rgb(52, 56, 82)',
+    backgroundColor: '#323035',
     borderRadius: 5,
     marginBottom: 10,
     padding: 10,
