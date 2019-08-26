@@ -1,4 +1,4 @@
-import styled from'styled-components/native';
+import styled from 'styled-components/native';
 import { TextInput } from 'react-native';
 
 export const FormField = styled.View`
@@ -15,9 +15,9 @@ export const Input = styled(TextInput).attrs ({
   placeholderTextColor: '#acacac',
 })`
   background: #212023;
+  text-align: center;
   width: 100%;
   color: white;
-  text-align: center;
   font-size: 14px;
   border-radius: 25px;
   padding: 6px 20px;

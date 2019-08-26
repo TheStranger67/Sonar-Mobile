@@ -101,9 +101,7 @@ export default withFormik ({
       //window.localStorage.setItem ('userName', data.userName);
     } catch (error) {
       setSubmitting (false);
-
-      console.log (error);
-
+      
       error.response
       ? setErrors ({message: error.response.data.message})
       : setErrors ({message: 'A comunicação com o servidor falhou'});

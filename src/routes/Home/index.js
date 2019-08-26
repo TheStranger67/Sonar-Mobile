@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MenuButton, HeaderSpace } from './styles';
@@ -39,4 +39,4 @@ const homeNavigation = createStackNavigator ({
   },
 });
 
-export default createAppContainer (homeNavigation);
+export default homeNavigation;

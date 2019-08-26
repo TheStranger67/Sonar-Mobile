@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, StatusBar, InteractionManager } from 'react-native';
 import LoginForm from '../../components/LoginForm';
 
 import {
@@ -10,21 +10,32 @@ import {
 } from './styles.js';
 
 export default function Login ({ navigation }) {
+  const [ loading, setLoading ] = useState (true);
+
+  useEffect (() => {
+    InteractionManager.runAfterInteractions (() => {
+      setLoading (false);
+    });
+  }, []);
+
   return (
     <Container>
-      <FormContainer>
-        <FormTitle> 
-          Login 
-        </FormTitle>
+      <StatusBar translucent={false} backgroundColor={'#151416'}/>
+      {!loading ? 
+        <FormContainer>
+          <FormTitle> 
+            Login 
+          </FormTitle>
 
-        <LoginForm navigation={navigation}/>
+          <LoginForm navigation={navigation}/>
 
-        <SignupButton> 
-          <Text style={{color: '#fff'}}> 
-            Cadastrar-se
-          </Text>
-        </SignupButton>
-      </FormContainer>
+          <SignupButton onPress={() => navigation.navigate ('Signup')}> 
+            <Text style={{color: '#fff'}}>
+              Cadastrar-se
+            </Text>
+          </SignupButton>
+        </FormContainer>
+      : null}
     </Container>
   );
 }

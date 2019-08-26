@@ -7,7 +7,7 @@ export const Container = styled(LinearGradient).attrs ({
   end: {x: 1, y: 0},
 })` 
   flex: 1;
-  padding: 50px;
+  padding: 30px;
 `;
 
 export const FormContainer = styled.View`
@@ -16,21 +16,3 @@ export const FormContainer = styled.View`
   padding: 20px;
   border-radius: 8px;
 `;
-
-export const FormTitle = styled.Text`
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0px auto 30px;
-`;
-
-export const SignupButton = styled.TouchableOpacity`
-  align-items: center;
-  width: 150px;
-  margin: 10% auto 0px;
-  padding: 10px;
-  border: 1px solid #ffffff50;
-  border-radius: 25px;
-  font-weight: 500;
-`;
-
