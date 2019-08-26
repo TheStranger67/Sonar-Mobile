@@ -44,7 +44,7 @@ function SignupJurForm (props) {
       <FormField>
         <Label> Nome completo </Label>
         <Input
-          placeholder='Insira o nome completo do responsavél'
+          placeholder='Insira o nome do responsável'
           error={errors.name && touched.name}
           value={values.name}
           onChangeText={handleChange ('name')}
@@ -90,7 +90,7 @@ function SignupJurForm (props) {
       <FormField>
         <Label> Confirme sua senha </Label>
         <Input
-          placeholder='Digite a mesma senha informada acima'
+          placeholder='Confirme a senha informada acima'
           error={errors.passwordConf && touched.passwordConf}
           value={values.passwordConf}
           onChangeText={handleChange ('passwordConf')}

@@ -74,7 +74,7 @@ function SignupFisForm (props) {
       <FormField>
         <Label> Confirme sua senha </Label>
         <Input
-          placeholder='Digite a mesma senha informada acima'
+          placeholder='Confirme a senha informada acima'
           error={errors.passwordConf && touched.passwordConf}
           value={values.passwordConf}
           onChangeText={handleChange ('passwordConf')}

@@ -7,7 +7,7 @@ export const Container = styled(LinearGradient).attrs ({
   end: {x: 1, y: 0},
 })` 
   flex: 1;
-  padding: 30px;
+  padding: 25px;
 `;
 
 export const FormContainer = styled.View`
