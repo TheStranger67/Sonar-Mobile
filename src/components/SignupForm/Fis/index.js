@@ -1,12 +1,17 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Picker } from 'react-native';
+import api from '../../../services/api';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
+import RNPickerSelect from 'react-native-picker-select';
 
 import {
   FormField,
   Label,
   Input,
+  DateInput,
+  Select,
+  MaskedInput,
   ErrorLabel,
   ErrorMessage,
   Submit
@@ -21,7 +26,24 @@ function SignupFisForm (props) {
     handleChange,
     handleBlur,
     handleSubmit,
+    setFieldValue,
+    setFieldTouched,
   } = props;
+
+  const handleMaskedInputChange = (field, value) => {
+    const rawValue = getRawValue (value);
+    setFieldValue (field, rawValue);
+  }
+
+  const handleSelectChange = (field, value) => {
+    setFieldValue (field, value);
+    setFieldTouched (field);
+  }
+
+  const getRawValue = value => {
+    const regEx = /\(|\)| |\.|\/|-|/g;
+    return value.replace (regEx, '');
+  }
 
   return (
     <View>
@@ -55,10 +77,27 @@ function SignupFisForm (props) {
           <ErrorLabel> {errors.email} </ErrorLabel>
         )}
       </FormField>
+
+      <FormField>
+        <Label> CPF </Label>
+        <MaskedInput
+          type={'cpf'}
+          placeholder='Digite o número de CPF'
+          error={errors.cpf && touched.cpf}
+          value={values.cpf}
+          onChangeText={value => handleMaskedInputChange ('cpf', value)}
+          onBlur={handleBlur ('cpf')}
+          maxLength={14}
+        />
+        {errors.cpf && touched.cpf && (
+          <ErrorLabel> {errors.cpf} </ErrorLabel>
+        )}
+      </FormField>
       
       <FormField>
         <Label> Senha </Label>
         <Input
+          secureTextEntry={true}
           placeholder='Mínimo de 8 caracteres'
           error={errors.password && touched.password}
           value={values.password}
@@ -74,6 +113,7 @@ function SignupFisForm (props) {
       <FormField>
         <Label> Confirme sua senha </Label>
         <Input
+          secureTextEntry={true}
           placeholder='Confirme a senha informada acima'
           error={errors.passwordConf && touched.passwordConf}
           value={values.passwordConf}
@@ -87,27 +127,52 @@ function SignupFisForm (props) {
       </FormField>
       
       <FormField>
-        <Label> CPF </Label>
-        <Input
-          placeholder='Digite seu número de CPF'
-          error={errors.cpf && touched.cpf}
-          value={values.cpf}
-          onChangeText={handleChange ('cpf')}
-          onBlur={handleBlur ('cpf')}
+        <Label> Sexo </Label>
+        <RNPickerSelect
+          placeholder={{label: 'Selecione uma opção', value: ''}}
+          onValueChange={value => handleSelectChange ('gender', value)}
+          useNativeAndroidPickerStyle={false}
+          items={[
+            { label: 'Masculino', value: 'M' },
+            { label: 'Feminino', value: 'F' },
+            { label: 'Outro', value: 'O' },
+          ]}
+          style={{
+            inputAndroid: {
+              color: '#fff',
+              paddingVertical: 6,
+              paddingHorizontal: 20,
+              backgroundColor: '#212023',
+              borderRadius: 25,
+              textAlign: 'center',
+              borderColor: '#D63230',
+              borderWidth: errors.gender && touched.gender ? 1 : 0,
+            },
+            placeholder: {
+              color: '#bebebe',
+            },
+          }}
         />
-        {errors.cpf && touched.cpf && (
-          <ErrorLabel> {errors.cpf} </ErrorLabel>
+        {errors.gender && touched.gender && (
+          <ErrorLabel> {errors.gender} </ErrorLabel>
         )}
       </FormField>
     
       <FormField>
         <Label> Data de nascimento </Label>
-        <Input
-          placeholder='dd/mm/aaaa'
+        <DateInput
+          mode='date'
+          format='DD/MM/YYYY'
+          minDate='01/01/1900'
+          maxDate='01/01/2010'
+          confirmBtnText='Confirmar'
+          cancelBtnText='Cancelar'
+          placeholder='Selecione uma data'
+          showIcon={false}
           error={errors.birth && touched.birth}
-          value={values.birth}
-          onChangeText={handleChange ('birth')}
-          onBlur={handleBlur ('birth')}
+          date={values.birth}
+          onDateChange={date => setFieldValue ('birth', date)}
+          onCloseModal={handleBlur ('birth')}
         />
         {errors.birth && touched.birth && (
           <ErrorLabel> {errors.birth} </ErrorLabel>
@@ -116,12 +181,19 @@ function SignupFisForm (props) {
 
       <FormField>
         <Label> Telefone (opcional) </Label>
-        <Input
+        <MaskedInput
+          type={'cel-phone'}
+          options={{
+            maskType: 'BRL',
+            withDDD: true,
+            dddMask: '(99) '
+          }}
           placeholder='Insira seu número de telefone'
           error={errors.phone && touched.phone}
           value={values.phone}
-          onChangeText={handleChange ('phone')}
+          onChangeText={value => handleMaskedInputChange ('phone', value)}
           onBlur={handleBlur ('phone')}
+          maxLength={15}
         />
         {errors.phone && touched.phone && (
           <ErrorLabel> {errors.phone} </ErrorLabel>
@@ -145,12 +217,12 @@ function SignupFisForm (props) {
 
 export default withFormik ({
   mapPropsToValues: () => ({
-    step: 0,
     name: '',
     email: '',
+    cpf: '',
     password: '',
     passwordConf: '',
-    cpf: '',
+    gender: '',
     birth: '',
     phone: '',
   }),
@@ -175,14 +247,11 @@ export default withFormik ({
       .required ('Preencha o campo de confirmação de senha')
       .oneOf ([Yup.ref ('password'), null], 'As duas senhas devem ser iguais'),
 
+    gender: Yup.string ()
+      .required ('Selecione um sexo'),
+
     birth: Yup.string ()
-      .required ('Preencha o campo de data de nascimento')
-      .min (8, 'Insira uma data válida (formato dd/mm/aaaa)')
-      .test ('validYear', 'Insira um ano válido (entre 1900 e 2010)', function (value) {
-        if (!value) return true;
-        const year = value.split ('/')[2];
-        return year >= 1900 && year <= 2010;
-      }),
+      .required ('Preencha o campo de data de nascimento'),
     
     phone: Yup.string ()
       .test ('validPhone', 'Insira um número de telefone válido', function (value) {
@@ -192,11 +261,9 @@ export default withFormik ({
       }),
   }),
 
-  handleSubmit: async (values, { setSubmitting, setErrors, setFieldValue, props }) => {
-    alert ('Success');
-    /*
+  handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
     delete values.passwordConf;
-    values.birth = values.birth.split ("/").reverse ().join ("-");
+    values.birth = values.birth.split ('/').reverse ().join ('-');
 
     try {
       const response = await api.post ('/users', values);
@@ -209,7 +276,7 @@ export default withFormik ({
 
       error.status
       ? setErrors ({message: error.response.data.message})
-      : setErrors ({message: 'A comunicação com o servidor falhou. Tente novamente!'});
-    } */
+      : setErrors ({message: 'A comunicação com o servidor falhou'});
+    }
   }, 
 }) (SignupFisForm);

@@ -46,5 +46,4 @@ export const Submit = styled.TouchableOpacity`
   margin: auto;
   padding: 10px;
   border-radius: 25px;
-  font-weight: 500;
 `;

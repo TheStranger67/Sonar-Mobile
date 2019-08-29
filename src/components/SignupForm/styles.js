@@ -1,5 +1,18 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { TextInput } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
+import DatePicker from 'react-native-datepicker';
+
+const inputStyle = css`
+  background: #212023;
+  text-align: center;
+  width: 100%;
+  color: #ffffff;
+  font-size: 14px;
+  border-radius: 25px;
+  padding: 6px 20px;
+  border: ${props => props.error ? '1px solid #D63230' : 'none'};
+`;
 
 export const FormField = styled.View`
   margin-bottom: 30px;
@@ -13,12 +26,31 @@ export const Label = styled.Text`
 
 export const Input = styled(TextInput).attrs ({
   placeholderTextColor: '#acacac',
+})`${inputStyle}`;
+
+export const MaskedInput = styled(TextInputMask).attrs ({
+  placeholderTextColor: '#acacac',
+})`${inputStyle}`;
+
+export const DateInput = styled(DatePicker).attrs ({
+  customStyles: {
+    dateTouchBody: {
+      height: 27,
+    },
+    dateInput: {
+      height: 27,
+      borderWidth: 0,
+    },
+    placeholderText: {
+      color: '#bebebe'
+    },
+    dateText: {
+      color: '#fff'
+    },
+  }
 })`
   background: #212023;
-  text-align: center;
   width: 100%;
-  color: white;
-  font-size: 14px;
   border-radius: 25px;
   padding: 6px 20px;
   border: ${props => props.error ? '1px solid #D63230' : 'none'};
@@ -48,3 +80,4 @@ export const Submit = styled.TouchableOpacity`
   border-radius: 25px;
   font-weight: 500;
 `;
+

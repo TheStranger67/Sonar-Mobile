@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StatusBar, InteractionManager } from 'react-native';
+import { Text, InteractionManager } from 'react-native';
 import LoginForm from '../../components/LoginForm';
 
 import {
@@ -20,7 +20,6 @@ export default function Login ({ navigation }) {
 
   return (
     <Container>
-      <StatusBar translucent={false} backgroundColor={'#151416'}/>
       {!loading ? 
         <FormContainer>
           <FormTitle> 

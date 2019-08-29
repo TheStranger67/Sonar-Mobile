@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StatusBar, InteractionManager } from 'react-native';
+import { ScrollView, InteractionManager } from 'react-native';
 import SignupFisForm from '../../../components/SignupForm/Fis';
 
 import {
@@ -7,7 +7,7 @@ import {
   FormContainer,
 } from './styles';
 
-export default function SignupFisPage () {
+export default function SignupFisPage ({ navigation }) {
   const [ loading, setLoading ] = useState (true);
 
   useEffect (() => {
@@ -18,16 +18,14 @@ export default function SignupFisPage () {
 
   if (loading) return (
     <Container>
-      <StatusBar translucent={false} backgroundColor={'#151416'}/>
     </Container>
   );
 
   return (
     <ScrollView>
       <Container>
-        <StatusBar translucent={false} backgroundColor={'#151416'}/>
         <FormContainer>
-          <SignupFisForm/>
+          <SignupFisForm navigation={navigation}/>
         </FormContainer>
       </Container>
     </ScrollView>

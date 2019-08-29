@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import api from '../../services/api';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   FormField,
@@ -94,11 +95,9 @@ export default withFormik ({
       const response = await api.post ('/users/auth', values);
       const { data } = response;
 
-      props.navigation.navigate ('Home');
-
-      //window.localStorage.setItem ('userToken', data.token);
-      //window.localStorage.setItem ('userId', data.userId);
-      //window.localStorage.setItem ('userName', data.userName);
+      await AsyncStorage.setItem ('userToken', data.token);
+      
+      props.navigation.navigate ('Logged');
     } catch (error) {
       setSubmitting (false);
       

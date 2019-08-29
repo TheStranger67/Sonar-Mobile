@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StatusBar, InteractionManager } from 'react-native';
+import { ScrollView, InteractionManager } from 'react-native';
 import SignupJurForm from '../../../components/SignupForm/Jur';
 
 import {
@@ -7,7 +7,7 @@ import {
   FormContainer,
 } from './styles';
 
-export default function SignupJurPage () {
+export default function SignupJurPage ({ navigation }) {
   const [ loading, setLoading ] = useState (true);
 
   useEffect (() => {
@@ -24,9 +24,8 @@ export default function SignupJurPage () {
   return (
     <ScrollView>
       <Container>
-        <StatusBar translucent={false} backgroundColor={'#151416'}/>
         <FormContainer>
-          <SignupJurForm/>
+          <SignupJurForm navigation={navigation}/>
         </FormContainer>
       </Container>
     </ScrollView>

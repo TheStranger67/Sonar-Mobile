@@ -1,59 +1,34 @@
-import React from 'react';
-import { YellowBox } from "react-native"
-import { createDrawerNavigator } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Home from './routes/Home';
-import Login from './pages/Login';
-import Signup from './routes/Signup';
+import React, { useState, useEffect } from 'react';
+import { YellowBox, StatusBar } from "react-native";
+import { RootNavigator } from './routes/Main';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 YellowBox.ignoreWarnings([
   "Warning: ViewPagerAndroid has been extracted",
-])
+]);
 
-const appNavigation = createDrawerNavigator ({
-  Home: {
-    screen: Home,
-    navigationOptions: {
-      drawerLabel: 'Início',
-      drawerIcon: () => (
-        <Icon name='home' size={20} color="#fff"></Icon>
-      ),
-    },
-  },
+export default function App () {
+  const [ logged, setLogged ] = useState (false);
+  
+  const auth = async () => {
+    const userToken = await AsyncStorage.getItem ('userToken');
 
-  Login: {
-    screen: Login,
-    navigationOptions: {
-      drawerLabel: 'Entrar',
-      drawerIcon: () => (
-        <Icon name='sign-in' size={20} color="#fff"></Icon>
-      ),
-    },
-  },
+    if (userToken !== null)
+      setLogged (true);
+    else
+      setLogged (false);
+  }
 
-  Signup: {
-    screen: Signup,
-    navigationOptions: {
-      drawerLabel: 'Cadastrar-se',
-      drawerIcon: () => (
-        <Icon name='user-plus' size={20} color="#fff"></Icon>
-      ),
-    },
-  },
-},
-{
-  hideStatusBar: false,
-  drawerBackgroundColor: '#151416',
-  drawerWidth: 210,
-  edgeWidth: 20,
-  contentOptions: {
-    inactiveTintColor: '#bebebe',
-    activeTintColor: '#ffffff',
-    activeBackgroundColor: '#0062cc',
-    labelStyle: {
-      fontSize: 16,
-    }
-  },
-});
+  useEffect (() => {
+    auth ();
+  }, []);
 
-export default appNavigation;
+  const Routes = RootNavigator (logged);
+  return (
+    <>
+      <StatusBar translucent={false} backgroundColor={'#151416'}/>
+      <Routes/>
+    </>
+  );
+}

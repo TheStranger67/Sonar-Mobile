@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import api from '../../../services/api';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -7,6 +8,7 @@ import {
   FormField,
   Label,
   Input,
+  MaskedInput,
   ErrorLabel,
   ErrorMessage,
   Submit
@@ -22,6 +24,16 @@ function SignupJurForm (props) {
     handleBlur,
     handleSubmit,
   } = props;
+
+  const handleMaskedInputChange = (field, value) => {
+    const rawValue = getRawValue (value);
+    setFieldValue (field, rawValue);
+  }
+
+  const getRawValue = value => {
+    const regEx = /\(|\)| |\.|\/|-|/g;
+    return value.replace (regEx, '');
+  }
 
   return (
     <View>
@@ -42,7 +54,7 @@ function SignupJurForm (props) {
       </FormField>
 
       <FormField>
-        <Label> Nome completo </Label>
+        <Label> Nome do resposável </Label>
         <Input
           placeholder='Insira o nome do responsável'
           error={errors.name && touched.name}
@@ -53,6 +65,22 @@ function SignupJurForm (props) {
         />
         {errors.name && touched.name && (
           <ErrorLabel> {errors.name} </ErrorLabel>
+        )}
+      </FormField>
+
+      <FormField>
+        <Label> CNPJ </Label>
+        <MaskedInput
+          type={'cnpj'}
+          placeholder='Digite o número de CNPJ'
+          error={errors.cnpj && touched.cnpj}
+          value={values.cnpj}
+          onChangeText={value => handleMaskedInputChange ('cnpj', value)}
+          onBlur={handleBlur ('cnpj')}
+          maxLength={18}
+        />
+        {errors.cnpj && touched.cnpj && (
+          <ErrorLabel> {errors.cnpj} </ErrorLabel>
         )}
       </FormField>
 
@@ -75,6 +103,7 @@ function SignupJurForm (props) {
       <FormField>
         <Label> Senha </Label>
         <Input
+          secureTextEntry={true}
           placeholder='Mínimo de 8 caracteres'
           error={errors.password && touched.password}
           value={values.password}
@@ -90,6 +119,7 @@ function SignupJurForm (props) {
       <FormField>
         <Label> Confirme sua senha </Label>
         <Input
+          secureTextEntry={true}
           placeholder='Confirme a senha informada acima'
           error={errors.passwordConf && touched.passwordConf}
           value={values.passwordConf}
@@ -101,29 +131,22 @@ function SignupJurForm (props) {
           <ErrorLabel> {errors.passwordConf} </ErrorLabel>
         )}
       </FormField>
-      
-      <FormField>
-        <Label> CNPJ </Label>
-        <Input
-          placeholder='Digite o número de CNPJ' 
-          error={errors.cnpj && touched.cnpj}
-          value={values.cnpj}
-          onChangeText={handleChange ('cnpj')}
-          onBlur={handleBlur ('cnpj')}
-        />
-        {errors.cnpj && touched.cnpj && (
-          <ErrorLabel> {errors.cnpj} </ErrorLabel>
-        )}
-      </FormField>
     
       <FormField>
         <Label> Telefone (opcional) </Label>
-        <Input
+        <MaskedInput
+          type={'cel-phone'}
+          options={{
+            maskType: 'BRL',
+            withDDD: true,
+            dddMask: '(99) '
+          }}
           placeholder='Insira um número de telefone'
           error={errors.phone && touched.phone}
           value={values.phone}
-          onChangeText={handleChange ('phone')}
+          onChangeText={value => handleMaskedInputChange ('phone', value)}
           onBlur={handleBlur ('phone')}
+          maxLength={15}
         />
         {errors.phone && touched.phone && (
           <ErrorLabel> {errors.phone} </ErrorLabel>
@@ -189,9 +212,6 @@ export default withFormik ({
   }),
 
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    alert ('Success');
-
-    /*
     delete values.passwordConf;
     
     try {
@@ -206,6 +226,6 @@ export default withFormik ({
       error.status 
       ? setErrors ({message: error.response.data.message})
       : setErrors ({message: 'A comunicação com o servidor falhou'});
-    } */
+    }
   },
 }) (SignupJurForm);
