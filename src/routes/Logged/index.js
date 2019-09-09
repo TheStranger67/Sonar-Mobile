@@ -34,7 +34,7 @@ export default createDrawerNavigator ({
 {
   hideStatusBar: false,
   drawerBackgroundColor: '#151416',
-  drawerWidth: 230,
+  drawerWidth: 250,
   edgeWidth: 20,
   contentOptions: {
     inactiveTintColor: '#bebebe',

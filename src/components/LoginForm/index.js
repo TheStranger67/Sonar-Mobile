@@ -92,17 +92,18 @@ export default withFormik ({
 
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
     try {
-      const response = await api.post ('/users/auth', values);
+      const response = await api.post ('/auth', values);
       const { data } = response;
-
+      
       await AsyncStorage.setItem ('userToken', data.token);
       
       props.navigation.navigate ('Logged');
     } catch (error) {
       setSubmitting (false);
-      
-      error.response
-      ? setErrors ({message: error.response.data.message})
+      const { data } = error.response || null;
+
+      data
+      ? setErrors ({message: data.message})
       : setErrors ({message: 'A comunicação com o servidor falhou'});
     }
   },

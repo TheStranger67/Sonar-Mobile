@@ -4,7 +4,7 @@ import { TextInput } from 'react-native';
 export const Container = styled.View`
   flex: 1;
   background: #212023;
-  padding: 15px 18px;
+  padding: 15px;
 `;
 
 export const SearchBar = styled(TextInput).attrs ({

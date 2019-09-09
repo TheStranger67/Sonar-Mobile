@@ -20,26 +20,27 @@ export default function Main () {
   }, []);
 
   const loadPosts = async () => {
-    setLoading (true);
     try {
       const response = await api.get ('/posts');
-      const { result } = response.data;
-      setPosts (result);
+      const { data } = response;
+      console.log (data)
+
+      setPosts (data);
       setLoading (false);
-    } catch (err) {
-      setLoading (false);
-    };
+    } catch (error) {
+      console.log (error.response.data);
+    }
   }
 
   const filterPosts = () => {
     return posts.filter (post => {
-      const { user_name, desc, song_name, song_genre, lyrics_name, lyrics_genre } = post;
-      return ((user_name && standardize (user_name).indexOf (standardize (query)) >= 0)
+      const { desc, user, songs, lyrics } = post;
+      return ((user.name && standardize (user.name).indexOf (standardize (query)) >= 0)
         || (desc && standardize (desc).indexOf (standardize (query)) >= 0)
-        || (song_name && standardize (song_name).indexOf (standardize (query)) >= 0)
-        || (song_genre && standardize (song_genre).indexOf (standardize (query)) >= 0)
-        || (lyrics_name && standardize (lyrics_name).indexOf (standardize (query)) >= 0)
-        || (lyrics_genre && standardize (lyrics_genre).indexOf (standardize (query)) >= 0)
+        || (songs.length > 0 && standardize (songs[0].name).indexOf (standardize (query)) >= 0)
+        || (songs.length > 0 && standardize (songs[0].genre).indexOf (standardize (query)) >= 0)
+        || (lyrics.length > 0 && standardize (lyrics[0].name).indexOf (standardize (query)) >= 0)
+        || (lyrics.length > 0 && standardize (lyrics[0].genre).indexOf (standardize (query)) >= 0)
       );
     });
   }

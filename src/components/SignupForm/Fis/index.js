@@ -115,14 +115,14 @@ function SignupFisForm (props) {
         <Input
           secureTextEntry={true}
           placeholder='Confirme a senha informada acima'
-          error={errors.passwordConf && touched.passwordConf}
-          value={values.passwordConf}
-          onChangeText={handleChange ('passwordConf')}
-          onBlur={handleBlur ('passwordConf')}
+          error={errors.password_confirmation && touched.password_confirmation}
+          value={values.password_confirmation}
+          onChangeText={handleChange ('password_confirmation')}
+          onBlur={handleBlur ('password_confirmation')}
           maxLength={16}
         />
-        {errors.passwordConf && touched.passwordConf && (
-          <ErrorLabel> {errors.passwordConf} </ErrorLabel>
+        {errors.password_confirmation && touched.password_confirmation && (
+          <ErrorLabel> {errors.password_confirmation} </ErrorLabel>
         )}
       </FormField>
       
@@ -221,7 +221,7 @@ export default withFormik ({
     email: '',
     cpf: '',
     password: '',
-    passwordConf: '',
+    password_confirmation: '',
     gender: '',
     birth: '',
     phone: '',
@@ -243,7 +243,7 @@ export default withFormik ({
       .min (8, 'A senha deve ter no mínimo 8 caracteres')
       .required ('Preencha o campo de senha'),
 
-    passwordConf: Yup.string ()
+    password_confirmation: Yup.string ()
       .required ('Preencha o campo de confirmação de senha')
       .oneOf ([Yup.ref ('password'), null], 'As duas senhas devem ser iguais'),
 
@@ -254,6 +254,7 @@ export default withFormik ({
       .required ('Preencha o campo de data de nascimento'),
     
     phone: Yup.string ()
+      .required ('Preencha o campo de telefone')
       .test ('validPhone', 'Insira um número de telefone válido', function (value) {
         const phoneExp = /\(|\)| |-/g;
         if (!value) return true;
@@ -262,20 +263,23 @@ export default withFormik ({
   }),
 
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    delete values.passwordConf;
-    values.birth = values.birth.split ('/').reverse ().join ('-');
+    const user = {
+      ...values,
+      birth: values.birth.split ('/').reverse ().join ('-')
+    }
 
     try {
-      const response = await api.post ('/users', values);
+      const response = await api.post ('/users', user);
       const { data } = response;
 
       alert (data.message);
       props.navigation.navigate ('Login');
     } catch (error) {
       setSubmitting (false);
+      const { data } = error.response || null;
 
-      error.status
-      ? setErrors ({message: error.response.data.message})
+      data
+      ? setErrors ({message: data.message})
       : setErrors ({message: 'A comunicação com o servidor falhou'});
     }
   }, 

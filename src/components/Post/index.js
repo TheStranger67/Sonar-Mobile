@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native' 
-//import download from 'downloadjs';
+import download from 'downloadjs';
 
 import { 
   Container,
@@ -17,51 +17,43 @@ import {
 } from './styles';
 
 export default function Post ({ postData : post }) {
-  const handleDownload = (pathName, fileName) => {
-    fetch ('/posts/download', {
-      method: 'GET',
-      headers: { 
-        'Authorization': 'Bearer ' + localStorage.userToken,
-        'path_name': pathName
-      }
-    })
-    .then (res => {
-      res.blob ()
-      .then (res_blob => {
-        download (res_blob, fileName);
-      })
-    }).catch (err => alert (err));
+  const handleSongDownload = async song => {
+    const response = await api.get (`/songs/${song.id}`, {responseType: 'blob'});
+    const { data } = response
+    download (data, song.filename);
+  }
+
+  const handleLyricDownload = async lyric => {
+    const response = await api.get (`/lyrics/${lyric.id}`, {responseType: 'blob'});
+    const { data } = response;
+    console.log (data)
+    download (data, lyric.filename);
   }
   
   return (
     <Container>
       <Header>
-        <Title> {post.user_name} </Title>
+        <Title> {post.user.name} </Title>
       </Header>
       <Description>
         <SecondaryText> {post.desc} </SecondaryText>
       </Description>
       <View>
-        {post.song_name && (
+        {post.songs.length > 0 && (
           <PostItem>
             <SubTitle> Música </SubTitle>
 
             <Content>
               <Strong> Nome: </Strong>
-              <SecondaryText> {post.song_name} </SecondaryText>
+              <SecondaryText> {post.songs[0].name} </SecondaryText>
             </Content>
             <Content>
               <Strong> Gênero musical: </Strong>
-              <SecondaryText> {post.song_genre} </SecondaryText>
+              <SecondaryText> {post.songs[0].genre} </SecondaryText>
             </Content>
 
             <DownloadButton
-              onClick={() => {
-                handleDownload (
-                  post.song_path.split ('/').pop (),
-                  post.song_filename
-                )
-              }}
+              onClick={() => handleSongDownload (post.songs[0])}
             > 
               <PrimaryText>
                 Baixar
@@ -69,26 +61,21 @@ export default function Post ({ postData : post }) {
             </DownloadButton>
           </PostItem>
         )} 
-        {post.lyrics_name && (
+        {post.lyrics.length > 0 && (
           <PostItem>
             <SubTitle> Letra </SubTitle>
 
             <Content>
               <Strong> Nome: </Strong>
-              <SecondaryText> {post.lyrics_name} </SecondaryText>
+              <SecondaryText> {post.lyrics[0].name} </SecondaryText>
             </Content>
             <Content>
               <Strong> Gênero musical: </Strong>
-              <SecondaryText> {post.lyrics_genre} </SecondaryText>
+              <SecondaryText> {post.lyrics[0].genre} </SecondaryText>
             </Content>
             
             <DownloadButton
-              onClick={() => {
-                handleDownload (
-                  post.lyrics_path.split ('/').pop (),
-                  post.lyrics_filename
-                )
-              }}
+              onClick={() => handleLyricDownload (post.lyrics[0])}
             > 
               <PrimaryText>
                 Baixar
@@ -106,14 +93,14 @@ export default function Post ({ postData : post }) {
     date
     desc
     id
-    lyrics_genre
-    lyrics_name
-    lyrics_path
-    lyrics_filename
-    song_genre
-    song_name
-    song_path
-    song_filename
-    user_name
+    lyrics[].genre
+    lyrics[].name
+    lyrics[].path
+    lyrics[].filename
+    songs[].genre
+    songs[].name
+    songs[].path
+    songs[].filename
+    user.name
   }
 */

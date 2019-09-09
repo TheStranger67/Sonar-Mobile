@@ -12,16 +12,29 @@ export const Container = styled(LinearGradient).attrs ({
 
 export const FormContainer = styled.View`
   background: #212023ac;
-  width: 100%;
   padding: 20px;
   border-radius: 8px;
+`;
+
+export const FormHeader = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 30px;
+`;
+
+export const BackButton = styled.TouchableOpacity`
+  width: 30px;
+  padding: 1px 8px;
 `;
 
 export const FormTitle = styled.Text`
   color: #ffffff;
   font-size: 24px;
   font-weight: bold;
-  margin: 0px auto 30px;
+`;
+
+export const HeaderSpace = styled.View`
+  width: 30px;
 `;
 
 export const SignupButton = styled.TouchableOpacity`

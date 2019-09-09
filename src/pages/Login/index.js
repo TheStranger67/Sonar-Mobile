@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Text, InteractionManager } from 'react-native';
 import LoginForm from '../../components/LoginForm';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {
   Container,
   FormContainer,
+  FormHeader,
+  BackButton,
   FormTitle,
-  SignupButton
+  HeaderSpace,
+  SignupButton,
 } from './styles.js';
 
 export default function Login ({ navigation }) {
@@ -22,13 +26,19 @@ export default function Login ({ navigation }) {
     <Container>
       {!loading ? 
         <FormContainer>
-          <FormTitle> 
-            Login 
-          </FormTitle>
+          <FormHeader>
+            <BackButton onPress={() => navigation.goBack ()}>
+              <Icon name='angle-left' size={26} color='#fff'></Icon>
+            </BackButton>
+            <FormTitle> 
+              Login
+            </FormTitle>
+            <HeaderSpace/>
+          </FormHeader>
 
           <LoginForm navigation={navigation}/>
 
-          <SignupButton onPress={() => navigation.navigate ('Signup')}> 
+          <SignupButton onPress={() => navigation.navigate ('Signup')}>
             <Text style={{color: '#fff'}}>
               Cadastrar-se
             </Text>
