@@ -22,8 +22,7 @@ export default function Main () {
   const loadPosts = async () => {
     try {
       const response = await api.get ('/posts');
-      const { data } = response;
-      console.log (data)
+      const { data } = response.data;
 
       setPosts (data);
       setLoading (false);

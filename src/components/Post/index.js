@@ -1,16 +1,19 @@
 import React from 'react';
-import { View } from 'react-native' 
+import { View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import download from 'downloadjs';
 
 import { 
   Container,
   Header,
+  Rating,
+  RatingCount,
+  AverageRating,
   Title,
-  SubTitle,
   Description,
-  PrimaryText,
   SecondaryText,
-  Strong,
+  ContentIcon,
+  ContentBox,
   Content,
   PostItem,
   DownloadButton
@@ -26,7 +29,6 @@ export default function Post ({ postData : post }) {
   const handleLyricDownload = async lyric => {
     const response = await api.get (`/lyrics/${lyric.id}`, {responseType: 'blob'});
     const { data } = response;
-    console.log (data)
     download (data, lyric.filename);
   }
   
@@ -34,52 +36,64 @@ export default function Post ({ postData : post }) {
     <Container>
       <Header>
         <Title> {post.user.name} </Title>
+        <Rating>
+          {post.ratings.length > 0 ?
+            <>
+              <RatingCount>        
+                {post.ratings.length > 1 
+                  ? `${post.ratings.length} avaliações`
+                  : `1 avaliação`
+                }
+              </RatingCount>
+              <Icon name='star' size={17} color='#e6c229'></Icon>
+              <AverageRating> {post.average_rating} </AverageRating>
+            </>
+          : null}
+        </Rating>
       </Header>
+
       <Description>
         <SecondaryText> {post.desc} </SecondaryText>
       </Description>
+
       <View>
         {post.songs.length > 0 && (
           <PostItem>
-            <SubTitle> Música </SubTitle>
-
-            <Content>
-              <Strong> Nome: </Strong>
-              <SecondaryText> {post.songs[0].name} </SecondaryText>
-            </Content>
-            <Content>
-              <Strong> Gênero musical: </Strong>
-              <SecondaryText> {post.songs[0].genre} </SecondaryText>
-            </Content>
-
+            <ContentBox>
+              <Content>
+                <ContentIcon name='music' size={17} color='#fff'></ContentIcon>
+                <SecondaryText> {post.songs[0].name} </SecondaryText>
+              </Content>
+              <Content>
+                <ContentIcon name='headphones' size={17} color='#fff'></ContentIcon>
+                <SecondaryText> {post.songs[0].genre} </SecondaryText>
+              </Content>
+            </ContentBox>
+            
             <DownloadButton
               onClick={() => handleSongDownload (post.songs[0])}
             > 
-              <PrimaryText>
-                Baixar
-              </PrimaryText>
+              <Icon name='download' size={17} color='#fff'></Icon>
             </DownloadButton>
           </PostItem>
         )} 
         {post.lyrics.length > 0 && (
           <PostItem>
-            <SubTitle> Letra </SubTitle>
-
-            <Content>
-              <Strong> Nome: </Strong>
-              <SecondaryText> {post.lyrics[0].name} </SecondaryText>
-            </Content>
-            <Content>
-              <Strong> Gênero musical: </Strong>
-              <SecondaryText> {post.lyrics[0].genre} </SecondaryText>
-            </Content>
+            <ContentBox>
+              <Content>
+                <ContentIcon name='file-text' size={15} color='#fff'></ContentIcon>
+                <SecondaryText> {post.lyrics[0].name} </SecondaryText>
+              </Content>
+              <Content>
+                <ContentIcon name='headphones' size={17} color='#fff'></ContentIcon>
+                <SecondaryText> {post.lyrics[0].genre} </SecondaryText>
+              </Content>
+            </ContentBox>
             
             <DownloadButton
               onClick={() => handleLyricDownload (post.lyrics[0])}
             > 
-              <PrimaryText>
-                Baixar
-              </PrimaryText>
+              <Icon name='download' size={17} color='#fff'></Icon>
             </DownloadButton>
           </PostItem>
         )}
