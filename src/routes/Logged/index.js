@@ -1,12 +1,8 @@
 import React from 'react';
-import { createDrawerNavigator, DrawerItems } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation';
+import { logout } from '../../services/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-community/async-storage';
 import Home from '../Home';
-
-const handleLogout = async () => {
-  await AsyncStorage.clear ();
-}
 
 export default createDrawerNavigator ({
   Home: {
@@ -20,7 +16,7 @@ export default createDrawerNavigator ({
   },
   Logout: {
     screen: ({ navigation }) => {
-      handleLogout ();
+      logout ();
       return navigation.navigate ('NotLogged');
     },
     navigationOptions: {

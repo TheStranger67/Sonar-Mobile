@@ -1,34 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { YellowBox, StatusBar } from "react-native";
 import { RootNavigator } from './routes/Main';
-import AsyncStorage from '@react-native-community/async-storage';
+import { MenuProvider } from 'react-native-popup-menu';
+import { isAuthenticated } from './services/auth';
 
-
-YellowBox.ignoreWarnings([
+YellowBox.ignoreWarnings ([
   "Warning: ViewPagerAndroid has been extracted",
 ]);
 
-export default function App () {
-  const [ logged, setLogged ] = useState (false);
-  
-  const auth = async () => {
-    const userToken = await AsyncStorage.getItem ('userToken');
-
-    if (userToken !== null)
-      setLogged (true);
-    else
-      setLogged (false);
-  }
-
-  useEffect (() => {
-    auth ();
-  }, []);
-
-  const Routes = RootNavigator (logged);
+export default function App () {  
+  const Routes = RootNavigator (isAuthenticated ());
   return (
-    <>
+    <MenuProvider>
       <StatusBar translucent={false} backgroundColor={'#151416'}/>
       <Routes/>
-    </>
+    </MenuProvider>
   );
 }

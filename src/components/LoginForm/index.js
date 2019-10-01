@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import api from '../../services/api';
+import { login } from '../../services/auth';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   FormField,
@@ -95,8 +95,7 @@ export default withFormik ({
       const response = await api.post ('/auth', values);
       const { data } = response;
       
-      await AsyncStorage.setItem ('userToken', data.token);
-      
+      login (data);
       props.navigation.navigate ('Logged');
     } catch (error) {
       setSubmitting (false);

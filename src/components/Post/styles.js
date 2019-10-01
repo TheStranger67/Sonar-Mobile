@@ -5,13 +5,14 @@ export const Container = styled.View`
   background: #323035;
   border: 1px solid #4340471a;
   border-radius: 5px;
+  margin: 0px 12px;
   padding: 8px;
 `;
 
 export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 `;
 
 export const Rating = styled.View`
@@ -25,11 +26,11 @@ export const RatingCount = styled.Text`
 
 export const AverageRating = styled.Text`
   color: #ffffff;
-  margin: 0px 0px 0px 3px;
+  margin: 0px 0px 0px 6px;
 `;
 
 export const Description = styled.View`
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 `;
 
 export const PostItem = styled.View`
@@ -38,7 +39,7 @@ export const PostItem = styled.View`
   justify-content: space-between;
   align-items: center;
   border: 1px solid #ffffff05;
-  padding: 8px 8px 7px;
+  padding: 7px 8px 5px;
   border-radius: 5px;
   margin-top: 8px;
 `;
@@ -63,9 +64,10 @@ export const DownloadButton = styled.TouchableOpacity`
   border-radius: 25px;
 `;
 
-export const Title = styled.Text`
+export const UserName = styled.Text`
   color: #ffffff;
   font-weight: bold;
+  margin-right: 10px;
 `;
 
 export const PrimaryText = styled.Text`

@@ -3,7 +3,7 @@ import Logged from '../Logged';
 import NotLogged from '../NotLogged';
 
 export const RootNavigator = (logged = false) => {
-  return createSwitchNavigator(
+  return createSwitchNavigator (
     {
       Logged: {
         screen: Logged,
@@ -19,7 +19,7 @@ export const RootNavigator = (logged = false) => {
       }
     }, {
       initialRouteName: logged ? 'Logged' : 'NotLogged',
-      headerMode: "none",
+      headerMode: 'none',
     }
   );
 };

@@ -1,31 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import Post from '../../components/Post';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Filters from '../../components/Filters';
+
 import {
   Container,
   FlatList,
+  BarDiv,
   SearchBar,
+  FiltersButton,
   Separator,
   EmptyItem,
+  LoadingMore,
+  ListFooter,
   Text,
 } from './styles';
 
 export default function Main () {
   const [ posts, setPosts ] = useState ([]);
   const [ loading, setLoading ] = useState (true);
+  const [ loadingMore, setLoadingMore ] = useState (false);
+  const [ modalVisible, setModalVisible ] = useState (false);
+  const [ filters, setFilters ] = useState ('');
   const [ query, setQuery ] = useState ('');
+  const [ page, setPage ] = useState (1);
+  const [ lastPage, setLastPage ] = useState (0);
 
   useEffect (() => {
-    loadPosts ();
+    getPosts ();
   }, []);
 
-  const loadPosts = async () => {
-    try {
-      const response = await api.get ('/posts');
-      const { data } = response.data;
+  useEffect (() => {
+    setLoading (true);
+    getPosts (1, filters);
+  }, [filters]);
 
-      setPosts (data);
+  const getPosts = async (pageNumber = page, _filters = filters) => {
+    if (lastPage && pageNumber > lastPage) return;
+
+    setLoadingMore (true);
+    try {
+      const response = await api.get (`/posts?page=${pageNumber}${_filters}`);
+      const { data, lastPage } = response.data;
+
+      pageNumber > 1 ? setPosts ([...posts, ...data]) : setPosts (data);
+      setPage (pageNumber + 1);
+      setLastPage (lastPage);
       setLoading (false);
+      setLoadingMore (false);
     } catch (error) {
       console.log (error.response.data);
     }
@@ -49,6 +72,10 @@ export default function Main () {
       .toLowerCase ()
       .normalize ('NFD')
       .replace (/[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g, '')
+  }
+
+  const closeModal = () => {
+    setModalVisible (false);
   }
 
   const postList = filterPosts ();
@@ -76,11 +103,22 @@ export default function Main () {
 
   return (
     <Container>
-      <SearchBar
-        name='query'
-        autoComplete='off'
-        placeholder='Pesquisar conteudo'
-        onChangeText={query => setQuery (query)}
+      <BarDiv>
+        <SearchBar
+          name='query'
+          autoComplete='off'
+          placeholder='Pesquisar conteudo'
+          onChangeText={query => setQuery (query)}
+        />
+        <FiltersButton onPress={() => setModalVisible (true)}>
+          <Icon name='sliders' size={20} color='#fff'></Icon>
+        </FiltersButton>
+      </BarDiv>
+
+      <Filters 
+        visible={modalVisible}
+        onChange={filters => setFilters (filters)}
+        onClose={closeModal}
       />
 
       <FlatList 
@@ -91,8 +129,13 @@ export default function Main () {
         )}
         ItemSeparatorComponent={separator}
         ListEmptyComponent={emptyList}
+        ListFooterComponent={
+          loadingMore && page > 1 ? <LoadingMore/> : <ListFooter/>
+        }
         refreshing={loading}
-        onRefresh={loadPosts}
+        onRefresh={getPosts}
+        onEndReached={() => getPosts ()}
+        onEndReachedThreshold={0.15}
       />
     </Container>
   );
