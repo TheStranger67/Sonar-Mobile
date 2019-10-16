@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import api from '../../../services/api';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
@@ -14,7 +14,7 @@ import {
   Submit
 } from '../styles';
 
-function SignupJurForm (props) {
+function CompanyForm (props) {
   const {
     values,
     touched,
@@ -89,6 +89,7 @@ function SignupJurForm (props) {
         <Input
           placeholder='Insira seu e-mail'
           spellCheck={false}
+          keyboardType='email-address'
           error={errors.email && touched.email}
           value={values.email}
           onChangeText={handleChange ('email')}
@@ -107,8 +108,8 @@ function SignupJurForm (props) {
           placeholder='Mínimo de 8 caracteres'
           error={errors.password && touched.password}
           value={values.password}
-          onChangeText={handleChange ('passwordConf')}
-          onBlur={handleBlur ('passwordConf')}
+          onChangeText={handleChange ('password_confirmation')}
+          onBlur={handleBlur ('password_confirmation')}
           maxLength={16}
         />
         {errors.password && touched.password && (
@@ -121,14 +122,14 @@ function SignupJurForm (props) {
         <Input
           secureTextEntry={true}
           placeholder='Confirme a senha informada acima'
-          error={errors.passwordConf && touched.passwordConf}
-          value={values.passwordConf}
-          onChangeText={handleChange ('passwordConf')}
-          onBlur={handleBlur ('passwordConf')}
+          error={errors.password_confirmation && touched.password_confirmation}
+          value={values.password_confirmation}
+          onChangeText={handleChange ('password_confirmation')}
+          onBlur={handleBlur ('password_confirmation')}
           maxLength={16}
         />
-        {errors.passwordConf && touched.passwordConf && (
-          <ErrorLabel> {errors.passwordConf} </ErrorLabel>
+        {errors.password_confirmation && touched.password_confirmation && (
+          <ErrorLabel> {errors.password_confirmation} </ErrorLabel>
         )}
       </FormField>
     
@@ -159,10 +160,11 @@ function SignupJurForm (props) {
         </ErrorMessage>
       )}
 
-      <Submit disabled={isSubmitting}>
-        <Text style={{color: '#fff'}}>
-          Cadastrar
-        </Text>
+      <Submit disabled={isSubmitting} onPress={handleSubmit}>
+        {isSubmitting
+          ? <ActivityIndicator color='#fff'/>
+          : <Text style={{color: '#fff'}}>Cadastrar</Text>
+        }
       </Submit>
     </View>
   );
@@ -174,7 +176,7 @@ export default withFormik ({
     name: '',
     email: '',
     password: '',
-    passwordConf: '',
+    password_confirmation: '',
     cnpj: '',
     phone: '',
   }),
@@ -196,7 +198,7 @@ export default withFormik ({
       .min (8, 'A senha deve ter no mínimo 8 caracteres')
       .required ('Preencha o campo de senha'),
 
-    passwordConf: Yup.string ()
+    password_confirmation: Yup.string ()
       .required ('Preencha o campo de confirmação de senha')
       .oneOf ([Yup.ref ('password'), null], 'As duas senhas devem ser iguais'),
       
@@ -212,10 +214,8 @@ export default withFormik ({
   }),
 
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    delete values.passwordConf;
-    
     try {
-      const response = await api.post ('/users/jur', values);
+      const response = await api.post ('/companies', values);
       const { data } = response;
 
       alert (data.message);
@@ -228,4 +228,4 @@ export default withFormik ({
       : setErrors ({message: 'A comunicação com o servidor falhou'});
     }
   },
-}) (SignupJurForm);
+}) (CompanyForm);

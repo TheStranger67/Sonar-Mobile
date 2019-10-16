@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { getUserID } from '../../services/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ReadMore from 'react-native-view-more-text';
-import download from 'downloadjs';
+import PostItem from './PostItem';
 import PostOptions from '../PostOptions';
 import RatingModal from '../RatingModal';
 
@@ -15,17 +15,15 @@ import {
   AverageRating,
   UserName,
   Description,
-  SecondaryText,
-  ContentIcon,
-  ContentBox,
-  Content,
-  PostItem,
-  DownloadButton
+  Footer,
+  RatingButton,
+  ButtonText,
 } from './styles';
 
 export default function Post ({ postData : post }) {
   const [ belongsToUser, setBelongsToUser ] = useState (false);
   const [ ratingModalVisible, setRatingModalVisible ] = useState (false);
+  const [ userRating, setUserRating ] = useState (null);
 
   useEffect (() => {
     validateBelongsToUser ();
@@ -45,18 +43,6 @@ export default function Post ({ postData : post }) {
 
   const renderViewLess = handlePress => {
     return <Text style={{color: '#007bff'}} onPress={handlePress}>menos</Text>
-  }
-
-  const handleSongDownload = async song => {
-    const response = await api.get (`/songs/${song.id}`, {responseType: 'blob'});
-    const { data } = response
-    download (data, song.filename);
-  }
-
-  const handleLyricDownload = async lyric => {
-    const response = await api.get (`/lyrics/${lyric.id}`, {responseType: 'blob'});
-    const { data } = response;
-    download (data, lyric.filename);
   }
   
   return (
@@ -78,19 +64,11 @@ export default function Post ({ postData : post }) {
               </>
             )}
           </Rating>
-
-          <RatingModal 
-            visible={ratingModalVisible}
-            onChange={filters => setFilters (filters)}
-            onClose={closeRatingModal}
-          />
-
           {belongsToUser && (
             <PostOptions postID={post.id}/>
           )}
         </View>
       </Header>
-
       <Description>
         <ReadMore
           numberOfLines={2}
@@ -101,49 +79,22 @@ export default function Post ({ postData : post }) {
           <Text>{post.desc}</Text>
         </ReadMore>
       </Description>
-
       <View>
-        {post.songs.length > 0 && (
-          <PostItem>
-            <ContentBox>
-              <Content>
-                <ContentIcon name='music' size={17} color='#fff'></ContentIcon>
-                <SecondaryText>{post.songs[0].name}</SecondaryText>
-              </Content>
-              <Content>
-                <ContentIcon name='headphones' size={17} color='#fff'></ContentIcon>
-                <SecondaryText>{post.songs[0].genre}</SecondaryText>
-              </Content>
-            </ContentBox>
-            
-            <DownloadButton
-              onClick={() => handleSongDownload (post.songs[0])}
-            > 
-              <Icon name='download' size={17} color='#fff'></Icon>
-            </DownloadButton>
-          </PostItem>
-        )} 
-        {post.lyrics.length > 0 && (
-          <PostItem>
-            <ContentBox>
-              <Content>
-                <ContentIcon name='file-text' size={15} color='#fff'></ContentIcon>
-                <SecondaryText>{post.lyrics[0].name}</SecondaryText>
-              </Content>
-              <Content>
-                <ContentIcon name='headphones' size={17} color='#fff'></ContentIcon>
-                <SecondaryText>{post.lyrics[0].genre}</SecondaryText>
-              </Content>
-            </ContentBox>
-            
-            <DownloadButton
-              onClick={() => handleLyricDownload (post.lyrics[0])}
-            > 
-              <Icon name='download' size={17} color='#fff'></Icon>
-            </DownloadButton>
-          </PostItem>
-        )}
+        {post.songs.length > 0 && <PostItem item={post.songs[0]} type='song'/>} 
+        {post.lyrics.length > 0 && <PostItem item={post.lyrics[0]} type='lyric'/>}
       </View>
+      <Footer>
+        <RatingButton onPress={() => setRatingModalVisible (true)}>
+          <Icon name='star' size={17} color='#e6c229'></Icon>
+          <ButtonText>Avaliar</ButtonText>
+        </RatingButton>
+      </Footer>
+      <RatingModal
+        visible={ratingModalVisible}
+        onChange={value => setUserRating (value)}
+        onClose={closeRatingModal}
+        postid={post.id}
+      />
     </Container>
   );
 }

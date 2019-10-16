@@ -114,13 +114,11 @@ export default function Main () {
           <Icon name='sliders' size={20} color='#fff'></Icon>
         </FiltersButton>
       </BarDiv>
-
-      <Filters 
+      <Filters
         visible={modalVisible}
         onChange={filters => setFilters (filters)}
         onClose={closeModal}
       />
-
       <FlatList 
         data={postList}
         keyExtractor={post => String (post.id)}

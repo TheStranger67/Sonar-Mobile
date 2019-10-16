@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native';
-import { TextInput } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker';
 
@@ -24,12 +23,14 @@ export const Label = styled.Text`
   margin-bottom: 7px;
 `;
 
-export const Input = styled(TextInput).attrs ({
+export const Input = styled.TextInput.attrs ({
   placeholderTextColor: '#acacac',
+  selectionColor: '#0062cc'
 })`${inputStyle}`;
 
 export const MaskedInput = styled(TextInputMask).attrs ({
   placeholderTextColor: '#acacac',
+  selectionColor: '#0062cc'
 })`${inputStyle}`;
 
 export const DateInput = styled(DatePicker).attrs ({

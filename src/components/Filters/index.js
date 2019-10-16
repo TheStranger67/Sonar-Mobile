@@ -43,7 +43,6 @@ export default function Filters ({ visible, onChange, onClose }) {
       onSwipeComplete={onClose}
       onBackButtonPress={onClose}
       hideModalContentWhileAnimating={true}
-      useNativeDriver={true}
       swipeDirection={'up'}
     >
       <Container>

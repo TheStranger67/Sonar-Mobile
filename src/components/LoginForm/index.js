@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import api from '../../services/api';
 import { login } from '../../services/auth';
 import { withFormik } from 'formik';
@@ -33,6 +33,7 @@ function LoginForm (props) {
           spellCheck={false}
           autoCapitalize='none'
           placeholder='Insira seu e-mail'
+          keyboardType='email-address'
           error={errors.email && touched.email}
           value={values.email}
           onChangeText={handleChange ('email')}
@@ -67,9 +68,10 @@ function LoginForm (props) {
       )}
       
       <Submit disabled={isSubmitting} onPress={handleSubmit}>
-        <Text style={{color: '#fff'}}>
-          Entrar
-        </Text>
+        {isSubmitting
+          ? <ActivityIndicator color='#fff'/>
+          : <Text style={{color: '#fff'}}>Entrar</Text>
+        }
       </Submit>
     </View>
   );

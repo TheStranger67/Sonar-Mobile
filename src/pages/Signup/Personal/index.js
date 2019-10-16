@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, InteractionManager } from 'react-native';
-import SignupJurForm from '../../../components/SignupForm/Jur';
+import PersonalForm from '../../../components/SignupForm/Personal';
 
 import {
   Container,
   FormContainer,
 } from './styles';
 
-export default function SignupJurPage ({ navigation }) {
+export default function PersonalPage ({ navigation }) {
   const [ loading, setLoading ] = useState (true);
 
   useEffect (() => {
@@ -25,7 +25,7 @@ export default function SignupJurPage ({ navigation }) {
     <ScrollView>
       <Container>
         <FormContainer>
-          <SignupJurForm navigation={navigation}/>
+          <PersonalForm navigation={navigation}/>
         </FormContainer>
       </Container>
     </ScrollView>

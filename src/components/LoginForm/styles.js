@@ -13,6 +13,7 @@ export const Label = styled.Text`
 
 export const Input = styled(TextInput).attrs ({
   placeholderTextColor: '#acacac',
+  selectionColor: '#0062cc'
 })`
   background: #212023;
   width: 100%;

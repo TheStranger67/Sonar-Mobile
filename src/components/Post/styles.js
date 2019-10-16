@@ -82,3 +82,20 @@ export const ContentIcon = styled(Icon)`
   width: 15px;
   margin-right: 8px;
 `;
+
+export const Footer = styled.View`
+  flex-direction: row;
+`;
+
+export const RatingButton = styled.TouchableOpacity`
+  background: transparent;
+  color: #ffffff;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8px;
+  padding: 0px;
+`;
+
+export const ButtonText = styled(PrimaryText)`
+  margin-left: 8px;
+`;

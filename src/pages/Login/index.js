@@ -35,9 +35,7 @@ export default function Login ({ navigation }) {
             </FormTitle>
             <HeaderSpace/>
           </FormHeader>
-
           <LoginForm navigation={navigation}/>
-
           <SignupButton onPress={() => navigation.navigate ('Signup')}>
             <Text style={{color: '#fff'}}>
               Cadastrar-se

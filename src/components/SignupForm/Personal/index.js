@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Picker } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import api from '../../../services/api';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
@@ -17,7 +17,7 @@ import {
   Submit
 } from '../styles';
 
-function SignupFisForm (props) {
+function PersonalForm (props) {
   const {
     values,
     touched,
@@ -67,6 +67,7 @@ function SignupFisForm (props) {
         <Input
           placeholder='Insira seu endereço de e-mail'
           spellCheck={false}
+          keyboardType='email-address'
           error={errors.email && touched.email}
           value={values.email}
           onChangeText={handleChange ('email')}
@@ -205,11 +206,12 @@ function SignupFisForm (props) {
           {errors.message}
         </ErrorMessage>
       )}
-
+      
       <Submit disabled={isSubmitting} onPress={handleSubmit}>
-        <Text style={{color: '#fff'}}>
-          Cadastrar
-        </Text>
+        {isSubmitting
+          ? <ActivityIndicator color='#fff'/>
+          : <Text style={{color: '#fff'}}>Cadastrar</Text>
+        }
       </Submit>
     </View>
   );
@@ -283,4 +285,4 @@ export default withFormik ({
       : setErrors ({message: 'A comunicação com o servidor falhou'});
     }
   }, 
-}) (SignupFisForm);
+}) (PersonalForm);
