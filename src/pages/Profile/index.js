@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
+import { getUserID } from '../../services/auth';
 import Post from '../../components/Post';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Filters from '../../components/Filters';
@@ -17,7 +18,7 @@ import {
   Text,
 } from './styles';
 
-export default function Home () {
+export default function Profile () {
   const [ posts, setPosts ] = useState ([]);
   const [ loading, setLoading ] = useState (true);
   const [ loadingMore, setLoadingMore ] = useState (false);
@@ -28,20 +29,22 @@ export default function Home () {
   const [ lastPage, setLastPage ] = useState (0);
 
   useEffect (() => {
-    getPosts ();
+    getUserPosts ();
   }, []);
 
   useEffect (() => {
     setLoading (true);
-    getPosts (1, filters);
+    getUserPosts (1, filters);
   }, [filters]);
 
-  const getPosts = async (pageNumber = page, _filters = filters) => {
+  const getUserPosts = async (pageNumber = page, _filters = filters) => {
     if (lastPage && pageNumber > lastPage) return;
 
     setLoadingMore (true);
     try {
-      const response = await api.get (`/posts?page=${pageNumber}${_filters}`);
+      const response = await api.get (
+        `/profiles/${getUserID ()}?page=${pageNumber}${_filters}`
+      );
       const { data, lastPage } = response.data;
 
       pageNumber > 1 ? setPosts ([...posts, ...data]) : setPosts (data);
@@ -131,8 +134,8 @@ export default function Home () {
           loadingMore && page > 1 ? <LoadingMore/> : <ListFooter/>
         }
         refreshing={loading}
-        onRefresh={() => getPosts ()}
-        onEndReached={() => getPosts ()}
+        onRefresh={() => getUserPosts ()}
+        onEndReached={() => getUserPosts ()}
         onEndReachedThreshold={0.15}
       />
     </Container>

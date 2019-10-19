@@ -1,33 +1,27 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import SyncStorage from 'sync-storage';
 
-export const isAuthenticated = async () => {
-  const token = await AsyncStorage.getItem ('userToken') || null;
+export const isAuthenticated = () => {
+  const token = SyncStorage.get ('userToken') || null;
   return token !== null;
 }
 
-export const getToken = async () => {
-  const token = await AsyncStorage.getItem ('userToken') || null;
+export const getToken = () => {
+  const token = SyncStorage.get ('userToken') || null;
   return token;
 }
 
-export const getUserID = async () => {
-  const userID = await AsyncStorage.getItem ('userID');
-  return userID;
+export const getUserID = () => SyncStorage.get ('userID');
+
+export const getUserName = () => SyncStorage.get ('userName');
+
+export const login = data => {
+  SyncStorage.set ('userToken', data.token);
+  SyncStorage.set ('userName', data.userName);
+  SyncStorage.set ('userID', String (data.userID));
 }
 
-export const getUserName = async () => {
-  const userName = await AsyncStorage.getItem ('userName');
-  return userName;
-}
-
-export const login = async data => {
-  await AsyncStorage.multiSet ([
-    ['userToken', data.token],
-    ['userName', data.userName],
-    ['userID', data.userID.toString ()]
-  ]);
-}
-
-export const logout = async () => {
-  await AsyncStorage.clear ();
+export const logout = () => {
+  SyncStorage.remove ('userToken');
+  SyncStorage.remove ('userName');
+  SyncStorage.remove ('userID');
 }

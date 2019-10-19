@@ -1,7 +1,7 @@
 import React from 'react';
 import { YellowBox, StatusBar } from 'react-native';
-import Main from './routes/Main';
 import { MenuProvider } from 'react-native-popup-menu';
+import Main from './routes/Main';
 
 YellowBox.ignoreWarnings ([
   'Warning: ViewPagerAndroid has been extracted',

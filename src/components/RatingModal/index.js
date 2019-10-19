@@ -17,7 +17,7 @@ import {
   Cancel,
 } from './styles';
 
-export default function RatingModal ({ visible, onClose, postid }) {
+export default function RatingModal ({ visible, onChange, onClose, postid }) {
   const [ value, setValue ] = useState (0);
   const [ comment, setComment ] = useState ('');
   const [ isSubmitting, setSubmitting ] = useState (false);

@@ -7,7 +7,7 @@ import {
   FormContainer,
 } from './styles';
 
-export default function PersonalPage ({ navigation }) {
+export default function PersonalSignupPage ({ navigation }) {
   const [ loading, setLoading ] = useState (true);
 
   useEffect (() => {

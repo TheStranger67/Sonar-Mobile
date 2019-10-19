@@ -1,13 +1,14 @@
 import React from 'react';
+import { getUserName } from '../../services/auth';
 import { createStackNavigator } from 'react-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MenuButton, HeaderSpace } from './styles';
-import Home from '../../pages/Home';
+import Profile from '../../pages/Profile';
 
-const homeNavigation = createStackNavigator ({
-  Home: {
-    screen: Home,
+const ProfileNavigation = createStackNavigator ({
+  Profile: {
+    screen: Profile,
     navigationOptions: ({ navigation }) => ({
       headerBackground: (
         <LinearGradient
@@ -25,7 +26,7 @@ const homeNavigation = createStackNavigator ({
       headerRight: (
         <HeaderSpace/>
       ),
-      title: 'Projeto Sonar',
+      title: `${getUserName ()}`,
       headerTintColor: '#ffffff',
       headerTitleStyle: {
         fontWeight: 'bold',
@@ -36,4 +37,4 @@ const homeNavigation = createStackNavigator ({
   },
 });
 
-export default homeNavigation;
+export default ProfileNavigation;

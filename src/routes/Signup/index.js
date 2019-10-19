@@ -1,17 +1,17 @@
 import { createMaterialTopTabNavigator } from 'react-navigation';
-import PersonalPage from '../../pages/Signup/Personal';
-import CompanyPage from '../../pages/Signup/Company';
+import PersonalSignupPage from '../../pages/Signup/Personal';
+import CompanySignupPage from '../../pages/Signup/Company';
 
 const signupNavigation = createMaterialTopTabNavigator ({
-  PersonalPage: {
-    screen: PersonalPage,
+  PersonalSignupPage: {
+    screen: PersonalSignupPage,
     navigationOptions: {
       tabBarLabel: 'Pessoal',
     }
   },
 
-  CompanyPage: {
-    screen: CompanyPage,
+  CompanySignupPage: {
+    screen: CompanySignupPage,
     navigationOptions: {
       tabBarLabel: 'Empresa',
     }

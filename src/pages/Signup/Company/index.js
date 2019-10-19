@@ -7,7 +7,7 @@ import {
   FormContainer,
 } from './styles';
 
-export default function SignupJurPage ({ navigation }) {
+export default function CompanySignupPage ({ navigation }) {
   const [ loading, setLoading ] = useState (true);
 
   useEffect (() => {

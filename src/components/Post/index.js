@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { getUserID } from '../../services/auth';
+import { isAuthenticated, getUserID } from '../../services/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ReadMore from 'react-native-view-more-text';
 import PostItem from './PostItem';
@@ -16,25 +16,25 @@ import {
   UserName,
   Description,
   Footer,
+  FooterDiv,
   RatingButton,
   ButtonText,
 } from './styles';
 
 export default function Post ({ postData : post }) {
-  const [ belongsToUser, setBelongsToUser ] = useState (false);
   const [ ratingModalVisible, setRatingModalVisible ] = useState (false);
   const [ userRating, setUserRating ] = useState (null);
 
   useEffect (() => {
-    validateBelongsToUser ();
+    setUserRating (getUserRating ());
   }, []);
-
-  const validateBelongsToUser = async () => {
-    setBelongsToUser (await getUserID () === post.user.id.toString ());
-  }
-
-  const closeRatingModal = () => {
-    setRatingModalVisible (false);
+  
+  const belongsToUser = () => getUserID () === String (post.user.id);
+  
+  const getUserRating = () => {
+    const rating = post.ratings.find (rating => rating.user_id !== getUserID ());
+    if (!rating) return null;
+    return rating.value;
   }
 
   const renderViewMore = handlePress => {
@@ -50,23 +50,16 @@ export default function Post ({ postData : post }) {
       <Header>
         <UserName>{post.user.name}</UserName>
         <View style={{flexDirection: 'row'}}>
-          <Rating>
-            {post.ratings.length > 0 && (
-              <>
-                <RatingCount>        
-                  {post.ratings.length > 1 
-                    ? `${post.ratings.length} avaliações`
-                    : `${post.ratings.length} avaliação`
-                  }
-                </RatingCount>
-                <Icon name='star' size={17} color='#e6c229'></Icon>
-                <AverageRating>{post.average_rating}</AverageRating>
-              </>
-            )}
-          </Rating>
-          {belongsToUser && (
-            <PostOptions postID={post.id}/>
+          {post.ratings.length > 0 && (
+            <Rating onPress={() => alert (post.id)}>
+              <RatingCount>        
+                {`(${post.ratings.length})`}
+              </RatingCount>
+              <Icon name='star' size={17} color='#e6c229'></Icon>
+              <AverageRating>{post.average_rating}</AverageRating>
+            </Rating>
           )}
+          {belongsToUser () && <PostOptions postID={post.id}/>}
         </View>
       </Header>
       <Description>
@@ -83,18 +76,27 @@ export default function Post ({ postData : post }) {
         {post.songs.length > 0 && <PostItem item={post.songs[0]} type='song'/>} 
         {post.lyrics.length > 0 && <PostItem item={post.lyrics[0]} type='lyric'/>}
       </View>
-      <Footer>
-        <RatingButton onPress={() => setRatingModalVisible (true)}>
-          <Icon name='star' size={17} color='#e6c229'></Icon>
-          <ButtonText>Avaliar</ButtonText>
-        </RatingButton>
-      </Footer>
-      <RatingModal
-        visible={ratingModalVisible}
-        onChange={value => setUserRating (value)}
-        onClose={closeRatingModal}
-        postid={post.id}
-      />
+      {isAuthenticated () && !belongsToUser () && (
+        <Footer>
+          {userRating ?
+            <FooterDiv>
+              <Icon name='star' size={17} color='#e6c229'></Icon>
+              <ButtonText>{userRating}</ButtonText>
+            </FooterDiv>
+            :
+            <RatingButton onPress={() => setRatingModalVisible (true)}>
+              <Icon name='star' size={17} color='#e6c229'></Icon>
+              <ButtonText>Avaliar</ButtonText>
+            </RatingButton>
+          }
+          <RatingModal
+            visible={ratingModalVisible}
+            onChange={value => setUserRating (value)}
+            onClose={() => setRatingModalVisible (false)}
+            postid={post.id}
+          />
+        </Footer>
+      )}
     </Container>
   );
 }
