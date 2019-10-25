@@ -44,7 +44,6 @@ function LoginForm (props) {
           <ErrorLabel> {errors.email} </ErrorLabel>
         )}
       </FormField>
-
       <FormField>
         <Label> Senha </Label>
         <Input
@@ -60,13 +59,11 @@ function LoginForm (props) {
           <ErrorLabel> {errors.password} </ErrorLabel>
         )}
       </FormField>
-
       {errors.message && (
         <ErrorMessage> 
           {errors.message} 
         </ErrorMessage>
       )}
-      
       <Submit disabled={isSubmitting} onPress={handleSubmit}>
         {isSubmitting
           ? <ActivityIndicator color='#fff'/>

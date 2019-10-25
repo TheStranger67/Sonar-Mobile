@@ -24,7 +24,7 @@ export default function Login ({ navigation }) {
 
   return (
     <Container>
-      {!loading ? 
+      {!loading && (
         <FormContainer>
           <FormHeader>
             <BackButton onPress={() => navigation.goBack ()}>
@@ -42,7 +42,7 @@ export default function Login ({ navigation }) {
             </Text>
           </SignupButton>
         </FormContainer>
-      : null}
+      )}
     </Container>
   );
 }

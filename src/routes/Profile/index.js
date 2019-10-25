@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MenuButton, HeaderSpace } from './styles';
 import Profile from '../../pages/Profile';
+import PostDetails from '../../pages/PostDetails';
 
 const ProfileNavigation = createStackNavigator ({
   Profile: {
@@ -35,6 +36,11 @@ const ProfileNavigation = createStackNavigator ({
       },
     }),
   },
+  PostDetails: {
+    screen: PostDetails,
+  }
+}, {
+  initialRouteName: 'Profile',
 });
 
 export default ProfileNavigation;

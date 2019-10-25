@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { isAuthenticated, getUserID } from '../../services/auth';
+import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ReadMore from 'react-native-view-more-text';
 import PostItem from './PostItem';
@@ -21,7 +22,7 @@ import {
   ButtonText,
 } from './styles';
 
-export default function Post ({ postData : post }) {
+function Post ({ data : post, navigation }) {
   const [ ratingModalVisible, setRatingModalVisible ] = useState (false);
   const [ userRating, setUserRating ] = useState (null);
 
@@ -32,18 +33,24 @@ export default function Post ({ postData : post }) {
   const belongsToUser = () => getUserID () === String (post.user.id);
   
   const getUserRating = () => {
-    const rating = post.ratings.find (rating => rating.user_id !== getUserID ());
+    const rating = post.ratings.find (rating => {
+      return String (rating.user_id) === getUserID ();
+    });
     if (!rating) return null;
     return rating.value;
   }
 
-  const renderViewMore = handlePress => {
-    return <Text style={{color: '#007bff'}} onPress={handlePress}>mais</Text>
-  }
+  const renderViewMore = handlePress => (
+    <Text style={{color: '#007bff'}} onPress={handlePress}>
+      mais
+    </Text>
+  );
 
-  const renderViewLess = handlePress => {
-    return <Text style={{color: '#007bff'}} onPress={handlePress}>menos</Text>
-  }
+  const renderViewLess = handlePress => (
+    <Text style={{color: '#007bff'}} onPress={handlePress}>
+      menos
+    </Text>
+  );
   
   return (
     <Container>
@@ -51,8 +58,10 @@ export default function Post ({ postData : post }) {
         <UserName>{post.user.name}</UserName>
         <View style={{flexDirection: 'row'}}>
           {post.ratings.length > 0 && (
-            <Rating onPress={() => alert (post.id)}>
-              <RatingCount>        
+            <Rating onPress={
+              () => navigation.navigate ('PostDetails', {pid: post.id})
+            }>
+              <RatingCount>
                 {`(${post.ratings.length})`}
               </RatingCount>
               <Icon name='star' size={17} color='#e6c229'></Icon>
@@ -100,3 +109,5 @@ export default function Post ({ postData : post }) {
     </Container>
   );
 }
+
+export default withNavigation (Post);

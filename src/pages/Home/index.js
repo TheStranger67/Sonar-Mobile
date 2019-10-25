@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { InteractionManager } from 'react-native';
 import api from '../../services/api';
 import Post from '../../components/Post';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -26,9 +27,13 @@ export default function Home () {
   const [ query, setQuery ] = useState ('');
   const [ page, setPage ] = useState (1);
   const [ lastPage, setLastPage ] = useState (0);
+  const [ loadingPage, setLoadingPage ] = useState (true);
 
   useEffect (() => {
-    getPosts ();
+    InteractionManager.runAfterInteractions (() => {
+      setLoadingPage (false);
+      getPosts ();
+    });
   }, []);
 
   useEffect (() => {
@@ -103,38 +108,42 @@ export default function Home () {
 
   return (
     <Container>
-      <BarDiv>
-        <SearchBar
-          name='query'
-          autoComplete='off'
-          placeholder='Pesquisar conteudo'
-          onChangeText={query => setQuery (query)}
-        />
-        <FiltersButton onPress={() => setModalVisible (true)}>
-          <Icon name='sliders' size={20} color='#fff'></Icon>
-        </FiltersButton>
-      </BarDiv>
-      <Filters
-        visible={modalVisible}
-        onChange={filters => setFilters (filters)}
-        onClose={closeModal}
-      />
-      <FlatList 
-        data={postList}
-        keyExtractor={post => String (post.id)}
-        renderItem={({ item }) => (
-          <Post postData={item}/>
-        )}
-        ItemSeparatorComponent={separator}
-        ListEmptyComponent={emptyList}
-        ListFooterComponent={
-          loadingMore && page > 1 ? <LoadingMore/> : <ListFooter/>
-        }
-        refreshing={loading}
-        onRefresh={() => getPosts ()}
-        onEndReached={() => getPosts ()}
-        onEndReachedThreshold={0.15}
-      />
+      {!loadingPage && (
+        <>
+          <BarDiv>
+            <SearchBar
+              name='query'
+              autoComplete='off'
+              placeholder='Pesquisar conteudo'
+              onChangeText={query => setQuery (query)}
+            />
+            <FiltersButton onPress={() => setModalVisible (true)}>
+              <Icon name='sliders' size={20} color='#fff'></Icon>
+            </FiltersButton>
+          </BarDiv>
+          <Filters
+            visible={modalVisible}
+            onChange={filters => setFilters (filters)}
+            onClose={closeModal}
+          />
+          <FlatList 
+            data={postList}
+            keyExtractor={post => String (post.id)}
+            renderItem={({ item }) => (
+              <Post data={item}/>
+            )}
+            ItemSeparatorComponent={separator}
+            ListEmptyComponent={emptyList}
+            ListFooterComponent={
+              loadingMore && page > 1 ? <LoadingMore/> : <ListFooter/>
+            }
+            refreshing={loading}
+            onRefresh={() => getPosts (1, filters)}
+            onEndReached={() => getPosts ()}
+            onEndReachedThreshold={0.15}
+          />
+        </>
+      )}
     </Container>
   );
 }
